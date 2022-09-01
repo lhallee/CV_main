@@ -49,7 +49,6 @@ def crop(dim,amt,num_class,img_path,mask_path,norm,scale):
                 mask_list.append(mask_crop)
     img_stack = np.array(tf.stack(img_list))
     mask_stack = np.array(tf.stack(mask_list))
-    print(mask_stack[1])
     mask_stack = target_data_process(mask_stack,num_class)
     train_input, test_input, train_label, test_label = train_test_split(img_stack, mask_stack, test_size=0.2)
 
