@@ -3,12 +3,17 @@ import tensorflow as tf
 from logan import plots
 from logan import dataprocessing
 from logan import self_built
-from keras_unet_collection import models, utils
+from keras_unet_collection import models, utils, losses
 from tensorflow import keras
 from keras import backend as K
 
 
 #Custom Loss Functions
+def hybrid_loss(y_true, y_pred):
+    loss_focal = losses.focal_tversky(y_true, y_pred, alpha=0.5, gamma=4/3)
+    loss_iou = losses.iou_seg(y_true, y_pred)
+    return loss_focal+loss_iou
+  
 def reconstruction_loss(real, reconstruction):
   return tf.reduce_mean(
       tf.reduce_sum(
@@ -86,6 +91,8 @@ def train(train_input,
         loss = reconstruction_loss
     if loss == 'jaccard':
         loss = jacard_loss
+    if loss =='hybrid':
+        loss = hybrid_loss
 
     model.compile(loss=loss, optimizer=optimizer)
 
