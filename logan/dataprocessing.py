@@ -11,7 +11,11 @@ from tensorflow import keras
 from sklearn.model_selection import train_test_split
 
 def target_data_process(target_array,num_class):
-    target_array[target_array>0]=1
+    if num_class == 2:
+        target_array[target_array>0]=1
+    if num_class == 3:
+        target_array[target_array==0]=1
+        target_array = target_array - 1
     return keras.utils.to_categorical(target_array, num_classes=num_class)
 
 def crop(dim,amt,num_class,img_path,mask_path,norm,scale):
@@ -25,8 +29,6 @@ def crop(dim,amt,num_class,img_path,mask_path,norm,scale):
         mask = tf.io.read_file(big_masks[i])
         mask = tf.image.decode_png(mask, channels=1)
         mask = np.array(mask)
-        mask[mask==0]=1 #classes have 0, 2, 3 so make 1,2,3 instead
-        mask = mask - 1 #convert to 0,1,2
         if norm:
             img = keras.utils.normalize(np.array(img), axis=1)
         if scale:
@@ -34,8 +36,8 @@ def crop(dim,amt,num_class,img_path,mask_path,norm,scale):
         for j in range(amt):
             img_crop = tf.image.stateless_random_crop(img, size=[dim, dim, 3], seed=[42,j]) #deterministic crop
             mask_crop = tf.image.stateless_random_crop(mask, size=[dim, dim, 1], seed=[42,j])
-            if ((np.count_nonzero(np.array(mask_crop)) / (dim * dim)) > 0.0):
-            #If there are more than 5% nonblack pixels in the mask the crop is kept, keeps images better for training
+            if ((np.count_nonzero(np.array(mask_crop)) / (dim * dim)) > 0.1):
+            #If there are more than 10% nonblack pixels in the mask the crop is kept, keeps images better for training
                 if (j % 3 == 0):
                     img_crop = tf.image.rot90(img_crop,k=1)
                     mask_crop = tf.image.rot90(mask_crop,k=1)
