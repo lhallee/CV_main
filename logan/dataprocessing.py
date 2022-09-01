@@ -25,6 +25,8 @@ def crop(dim,amt,num_class,img_path,mask_path,norm,scale):
         mask = tf.io.read_file(big_masks[i])
         mask = tf.image.decode_png(mask, channels=1)
         mask = np.array(mask)
+        mask[mask==0]=1 #classes have 0, 2, 3 so make 1,2,3 instead
+        mask = mask - 1 #convert to 0,1,2
         if norm:
             img = keras.utils.normalize(np.array(img), axis=1)
         if scale:
@@ -32,7 +34,7 @@ def crop(dim,amt,num_class,img_path,mask_path,norm,scale):
         for j in range(amt):
             img_crop = tf.image.stateless_random_crop(img, size=[dim, dim, 3], seed=[42,j]) #deterministic crop
             mask_crop = tf.image.stateless_random_crop(mask, size=[dim, dim, 1], seed=[42,j])
-            if ((np.count_nonzero(np.array(mask_crop)) / (dim * dim)) > 0.01):
+            if ((np.count_nonzero(np.array(mask_crop)) / (dim * dim)) > 0.0):
             #If there are more than 5% nonblack pixels in the mask the crop is kept, keeps images better for training
                 if (j % 3 == 0):
                     img_crop = tf.image.rot90(img_crop,k=1)
@@ -47,11 +49,15 @@ def crop(dim,amt,num_class,img_path,mask_path,norm,scale):
                 mask_list.append(mask_crop)
     img_stack = np.array(tf.stack(img_list))
     mask_stack = np.array(tf.stack(mask_list))
+    print(mask_stack[1])
     mask_stack = target_data_process(mask_stack,num_class)
     train_input, test_input, train_label, test_label = train_test_split(img_stack, mask_stack, test_size=0.2)
 
     print(train_input.shape, train_label.shape, test_input.shape, test_label.shape)
-    plots.crop_viewer(train_input,train_label)
+    if num_class == 2:
+        plots.crop_viewer(train_input,train_label)
+    if num_class == 3:
+        plots.multi_crop_viewer(train_input,train_label)
     return train_input,train_label,test_input,test_label
 
 def eval(dim,num_class,img_path,mask_path,norm,scale):

@@ -25,6 +25,22 @@ def crop_viewer(img, mask):
         AX[1].set_title("Segmentation mask", fontsize=14)
         plt.show()
 
+def multi_crop_viewer(img,mask):
+    for i in range(3):
+        fig, AX = plt.subplots(1,4,figsize=(10,3))
+        plt.subplots_adjust(0,0,1,1,hspace=0,wspace=0.1)
+        for ax in AX:
+            ax = ax_decorate_box(ax)
+        AX[0].pcolormesh(np.mean(img[i, ...], axis=-1))
+        AX[1].pcolormesh(mask[i, ..., 0]>0, cmap=plt.cm.gray)
+        AX[2].pcolormesh(mask[i, ..., 1]>0, cmap=plt.cm.gray)
+        AX[3].pcolormesh(mask[i, ..., 2]>0, cmap=plt.cm.gray)
+
+        AX[0].set_title("Original", fontsize=14);
+        AX[1].set_title("Background", fontsize=14);
+        AX[2].set_title("Lobule", fontsize=14);
+        AX[3].set_title("HEV", fontsize=14);
+        plt.show()
 def toy_viewer(img, mask):
     for i in range(3):
         fig, AX = plt.subplots(1, 2, figsize=(7, 3))
@@ -32,7 +48,7 @@ def toy_viewer(img, mask):
         for ax in AX:
             ax = ax_decorate_box(ax)
         AX[0].pcolormesh(img[i, ..., 0], cmap=plt.cm.gray)
-        AX[1].pcolormesh(mask[i, ..., 0] > 0, cmap=plt.cm.gray)
+        AX[1].pcolormesh(mask[i, ..., 0], cmap=plt.cm.gray)
         AX[0].set_title("Original", fontsize=14)
         AX[1].set_title("Segmentation mask", fontsize=14)
         plt.show()
@@ -61,6 +77,28 @@ def test_viewer(img, mask, pred):
         AX[2].set_title("Labeled truth", fontsize=14)
         plt.show()
 
+def multi_test_viewer(img, mask, pred):
+    for i in range(3):
+        fig, AX = plt.subplots(1,7,figsize=(20,3))
+        plt.subplots_adjust(0,0,1,1,hspace=0,wspace=0.1)
+        for ax in AX:
+            ax = ax_decorate_box(ax)
+        AX[0].pcolormesh(np.mean(img[i, ...], axis=-1))
+        AX[1].pcolormesh(pred[i, ..., 0], cmap=plt.cm.coolwarm)
+        AX[2].pcolormesh(pred[i, ..., 1], cmap=plt.cm.coolwarm)
+        AX[3].pcolormesh(pred[i, ..., 2], cmap=plt.cm.coolwarm)
+        AX[4].pcolormesh(mask[i, ..., 0], cmap=plt.cm.gray)
+        AX[5].pcolormesh(mask[i, ..., 1], cmap=plt.cm.gray)
+        AX[6].pcolormesh(mask[i, ..., 2], cmap=plt.cm.gray)
+
+        AX[0].set_title("Original", fontsize=14);
+        AX[1].set_title("Mask Background", fontsize=14);
+        AX[2].set_title("Mask Lobule", fontsize=14);
+        AX[3].set_title("Mask HEV", fontsize=14);
+        AX[4].set_title("Pred Background", fontsize=14);
+        AX[5].set_title("Pred Lobule", fontsize=14);
+        AX[6].set_title("Pred HEV", fontsize=14);
+        plt.show()
 def eval_viewer(img, mask, pred):
     dim = len(img[:][0])
     x_col, y_col = cols(dim)

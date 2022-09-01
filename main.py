@@ -42,6 +42,7 @@ def initialize(
 ):
     #working_dir = os.path.dirname(__file__)
     working_dir = '/content/drive/MyDrive/Logan/CV/IMG - Weights'
+    #working_dir = 'C:/Users/Logan Hallee/Desktop/Segmentation/Dir'
     img_path = working_dir + img_path
     mask_path = working_dir + mask_path
     save_weight = working_dir + save_weight + str(dim) + '-' + run_type + '-' + loss + '-' + optimizer + '-' + str(LR) + '-' + str(date.today()) + '.hdf5'
@@ -82,4 +83,3 @@ def initialize(
                            backbone, LR, optimizer, loss,
                            channel, norm, scale
                            )
-

@@ -125,7 +125,10 @@ def train(train_input,
 
     y_pred = model.predict([test_input])
     print('Testing set cross-entropy = {}'.format(np.mean(keras.losses.categorical_crossentropy(test_label, y_pred))))
-    plots.test_viewer(test_input,test_label,y_pred)
+    if num_class == 2:
+        plots.test_viewer(test_input,test_label,y_pred)
+    if num_class == 3:
+        plots.multi_test_viewer(test_input,test_label,y_pred)
 
 def evaluate(weight_path,
              img_path,
@@ -134,7 +137,7 @@ def evaluate(weight_path,
              num_class,
              backbone, LR, optimizer, loss,
              channel, norm, scale):
-    dim = 1024
+    dim = 2048
     big_crops, big_masks = dataprocessing.eval(dim,num_class,img_path,mask_path,norm,scale)
     if model_type == 'unet':
         model = models.att_unet_2d((dim, dim, channel), filter_num=[64, 128, 256, 512, 1024], n_labels=num_class,
