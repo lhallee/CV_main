@@ -45,7 +45,7 @@ def initialize(
     #working_dir = 'C:/Users/Logan Hallee/Desktop/Segmentation/Dir'
     img_path = working_dir + img_path
     mask_path = working_dir + mask_path
-    save_weight = working_dir + save_weight + str(dim) + '-' + run_type + '-' + loss + '-' + optimizer + '-' + str(LR) + '-' + str(date.today()) + '.hdf5'
+    save_weight = working_dir + save_weight + str(dim) + '-' + backbone + run_type + '-' + loss + '-' + optimizer + '-' + str(LR) + '-' + str(date.today()) + '.hdf5'
 
     channel = 3
     if train:
