@@ -19,7 +19,7 @@ def crop_viewer(img, mask):
         plt.subplots_adjust(0, 0, 1, 1, hspace=0, wspace=0.1)
         for ax in AX:
             ax = ax_decorate_box(ax)
-        AX[0].pcolormesh(np.mean(img[i, ...]*255, axis=-1), cmap=plt.cm.jet)
+        AX[0].pcolormesh(np.mean(img[i, ...], axis=-1))
         AX[1].pcolormesh(mask[i, ..., 0], cmap=plt.cm.gray)
         AX[0].set_title("Original", fontsize=14)
         AX[1].set_title("Segmentation mask", fontsize=14)
@@ -52,7 +52,7 @@ def test_viewer(img, mask, pred):
         for ax in AX:
             ax = ax_decorate_box(ax)
 
-        AX[0].pcolormesh(np.mean(img[i, ...,]*255, axis=-1), cmap=plt.cm.jet)
+        AX[0].pcolormesh(np.mean(img[i, ...,]*255, axis=-1))
         AX[1].pcolormesh(pred[i, ..., 1], cmap=plt.cm.jet)
         AX[2].pcolormesh(mask[i, ..., 1], cmap=plt.cm.jet)
 
@@ -72,7 +72,7 @@ def eval_viewer(img, mask, pred):
         for ax in AX:
             ax = ax_decorate_box(ax)
 
-        AX[0].pcolormesh(np.mean(img[i, ...,]*255, axis=-1), cmap=plt.cm.jet)
+        AX[0].pcolormesh(np.mean(img[i, ...,]*255, axis=-1))
         AX[1].pcolormesh(pred[i, ..., 1], cmap=plt.cm.jet)
         AX[2].pcolormesh(mask[i, ..., 1], cmap=plt.cm.jet)
 
