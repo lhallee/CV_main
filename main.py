@@ -40,7 +40,8 @@ def initialize(
     norm = False, #If true, normalize the images by their mean and std, -bool
     scale = False, #If true, divide images by 255, -bool
 ):
-    working_dir = os.path.dirname(__file__)
+    #working_dir = os.path.dirname(__file__)
+    working_dir = '/content/drive/MyDrive/Logan/CV/IMG - Weights'
     img_path = working_dir + img_path
     mask_path = working_dir + mask_path
     save_weight = working_dir + save_weight + str(dim) + '-' + run_type + '-' + loss + '-' + optimizer + '-' + str(LR) + '-' + str(date.today()) + '.hdf5'
