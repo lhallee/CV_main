@@ -73,7 +73,7 @@ def eval(dim,num_class,img_path,mask_path,norm,scale):
         mask = tf.image.decode_png(mask, channels=1)
         mask = np.array(mask)
         if norm:
-            img = keras.untils.normalize(np.array(img), axis=1)
+            img = keras.utils.normalize(np.array(img), axis=1)
         if scale:
             img = img / 255
         for j in range(3):
