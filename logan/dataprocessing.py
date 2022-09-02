@@ -75,11 +75,10 @@ def eval(dim,num_class,img_path,mask_path,norm,scale):
             img = keras.utils.normalize(np.array(img), axis=1)
         if scale:
             img = img / 255
-        for j in range(3):
-            img_crop = tf.image.stateless_random_crop(img, size=[dim, dim, 3], seed=[42,j]) #deterministic crop
-            mask_crop = tf.image.stateless_random_crop(mask, size=[dim, dim, 1], seed=[42,j])
-            img_list.append(img_crop)
-            mask_list.append(mask_crop)
+        img_crop = tf.image.stateless_random_crop(img, size=[dim, dim, 3], seed=[42,j]) #deterministic crop
+        mask_crop = tf.image.stateless_random_crop(mask, size=[dim, dim, 1], seed=[42,j])
+        img_list.append(img_crop)
+        mask_list.append(mask_crop)
     img_stack = np.array(tf.stack(img_list))
     mask_stack = np.array(tf.stack(mask_list))
     mask_stack = target_data_process(mask_stack,num_class)
