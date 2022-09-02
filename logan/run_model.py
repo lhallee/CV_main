@@ -1,5 +1,7 @@
 import numpy as np
 import tensorflow as tf
+import skimage
+from glob import glob
 from logan import plots
 from logan import dataprocessing
 from logan import self_built
@@ -136,13 +138,12 @@ def train(train_input,
 
 def evaluate(weight_path,
              img_path,
-             mask_path,
              model_type,
              num_class,
              backbone, LR, optimizer, loss,
              channel, norm, scale, eval_dim):
     dim = eval_dim
-    big_crops, big_masks = dataprocessing.eval(dim,num_class,img_path,mask_path,norm,scale)
+    #big_crops, big_masks = dataprocessing.eval_crops(dim,num_class,img_path,mask_path,norm,scale)
     if model_type == 'unet':
         model = models.att_unet_2d((dim, dim, channel), filter_num=[64, 128, 256, 512, 1024], n_labels=num_class,
                                    stack_num_down=2, stack_num_up=2, activation='ReLU',
@@ -193,10 +194,46 @@ def evaluate(weight_path,
 
     model.compile(loss=loss, optimizer=optimizer)
     model.load_weights(weight_path)
-    y_pred = model.predict([big_crops])
-    print('Testing set cross-entropy = {}'.format(np.mean(keras.losses.categorical_crossentropy(big_masks, y_pred))))
+
+    full_img_list = []
+    big_imgs_path = sorted(glob(img_path + '*.png'))
+    big_img_path = big_imgs_path[0]
+    big_img = tf.io.read_file(big_img_path)
+    big_img = tf.image.decode_png(big_img, channels=3)
+    big_img = np.array(big_img)
+
+    if norm:
+        big_img = keras.utils.normalize(np.array(big_img), axis=1)
+    if scale:
+        big_img = big_img / 255
+
+    H, W, C = big_img.shape
+    step = dim
+    patch_imgs = skimage.util.view_as_windows(big_img, (dim, dim, 3), step=step)
+    for i in range(len(patch_imgs)):
+        for j in range(len(patch_imgs[0])):
+            full_img_list.append(patch_imgs[i][j])
+    full_stack = tf.stack(full_img_list)
+    full_stack = np.array(full_stack)
+    full_stack = full_stack.reshape(len(full_stack), dim, dim, 3)
+    recon = np.zeros((H, W))
+    L = len(full_stack)
+    print(full_stack.shape)
+
+    row_num = int(W / L)
+    col_num = int(H / L)
+    y_pred = model.predict([full_stack])
+
+    for i in range(col_num):
+        for j in range(row_num):
+            recon[i*dim:(i+1)*dim, j*dim:(j+1)*dim] = y_pred[i+j,...,0]
+
+    plots.eval_viewer(recon)
+
+
+    '''
     if num_class == 2:
         plots.eval_viewer(big_crops, big_masks, y_pred)
     if num_class == 3:
         plots.multi_eval_viewer(big_crops, big_masks, y_pred)
-
+    '''

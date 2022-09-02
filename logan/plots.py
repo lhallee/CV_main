@@ -1,11 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.interpolate
+import skimage
 
-
-def cols(n):
-  x = np.array(range(n))
-  y = np.copy(x)
+def cols(H, W):
+  x = np.array(range(W))
+  y = np.array(range(H))
   return x,y
 def ax_decorate_box(ax):
     [j.set_linewidth(0) for j in ax.spines.values()]
@@ -99,34 +99,26 @@ def multi_test_viewer(img, mask, pred):
         AX[5].set_title("Mask Lobule", fontsize=14);
         AX[6].set_title("Mask HEV", fontsize=14);
         plt.show()
-def eval_viewer(img, mask, pred):
-    dim = len(img[:][0])
-    x_col, y_col = cols(dim)
-    xfit = np.arange(0, dim, 0.1)
-    yfit = np.arange(0, dim, 0.1)
-    for i in range(3):
-        fig, AX = plt.subplots(1, 3, figsize=(20, 7))
-        plt.subplots_adjust(0, 0, 1, 1, hspace=0, wspace=0.1)
-        for ax in AX:
-            ax = ax_decorate_box(ax)
+def eval_viewer(img):
+    H, W = img.shape
+    x_col, y_col = cols(H,W)
+    xfit = np.arange(0, W, 0.1)
+    yfit = np.arange(0, H, 0.1)
+    levels = np.linspace(0.0, 1.0, 21)
+    set_func = scipy.interpolate.RectBivariateSpline(y_col,x_col,img)
+    func = set_func(x_col,y_col)
 
-        AX[0].pcolormesh(np.mean(img[i, ...,]*255, axis=-1))
-        AX[1].pcolormesh(pred[i, ..., 1], cmap=plt.cm.jet)
-        AX[2].pcolormesh(mask[i, ..., 1], cmap=plt.cm.jet)
+    plt.contourf(func, levels=levels, cmap=plt.cm.coolwarm)
+    plt.colorbar()
+    plt.show()
 
-        AX[0].set_title("Scaled", fontsize=14)
-        AX[1].set_title("Prediction", fontsize=14)
-        AX[2].set_title("Labeled truth", fontsize=14)
-        plt.show()
+    filt_img = skimage.filters.threshold_local(img)
+    filt_set_func = scipy.interpolate.RectBivariateSpline(y_col,x_col,filt_img)
+    filt_func = filt_set_func(x_col,y_col)
 
-    for i in range(3):
-        img = pred[i,...,1]
-        set_func = scipy.interpolate.RectBivariateSpline(x_col,y_col,img)
-        detail_func = set_func(xfit,yfit)
-        levels = np.linspace(0.0,1.0,21)
-        plt.contourf(detail_func, levels=levels, cmap=plt.cm.coolwarm)
-        plt.colorbar()
-        plt.show()
+    plt.contourf(filt_func, levels=levels, cmap=plt.cm.coolwarm)
+    plt.colorbar()
+    plt.show()
 
 def multi_eval_viewer(img, mask, pred):
     dim = len(img[:][0])
@@ -163,3 +155,4 @@ def multi_eval_viewer(img, mask, pred):
         plt.contourf(detail_func, levels=levels, cmap=plt.cm.coolwarm)
         plt.colorbar()
         plt.show()
+

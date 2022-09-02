@@ -78,7 +78,6 @@ def initialize(
 
         run_model.evaluate(weights,
                            img_path,
-                           mask_path,
                            model_type,
                            num_class,
                            backbone, LR, optimizer, loss,

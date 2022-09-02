@@ -60,7 +60,7 @@ def crop(dim,amt,num_class,img_path,mask_path,norm,scale):
         plots.multi_crop_viewer(train_input,train_label)
     return train_input,train_label,test_input,test_label
 
-def eval(dim,num_class,img_path,mask_path,norm,scale):
+def eval_crops(dim,num_class,img_path,mask_path,norm,scale):
     img_list = []
     mask_list = []
     big_imgs = sorted(glob(img_path + '*.png'))
@@ -83,7 +83,20 @@ def eval(dim,num_class,img_path,mask_path,norm,scale):
     mask_stack = np.array(tf.stack(mask_list))
     mask_stack = target_data_process(mask_stack,num_class)
     return img_stack, mask_stack
-    
+
+def window_eval():
+    big_imgs = sorted(glob(img_path + '*.png'))
+    big_img = big_imgs[0]
+    W = len(big_img[0,:,:])
+    H = len(big_img[:,0,:])
+    step = 64
+    print(W,H)
+    patch_imgs = skimage.util.view_as_windows(big_img, (512, 512, 1), step=step)
+    reconstructed_img = np.zeros((W, H, 1))
+    for x in range(patch_imgs.shape[0]):
+        for y in range(patch_imgs.shape[1]):
+            x_pos, y_pos = x * step, y * step
+            reconstructed_img[x_pos:x_pos + (step * 2), y_pos:y_pos + (step * 2)] = patch_imgs[x, y, 0, ...]
 def make(n, side_len, circ_rad, theta, ishift=0, jshift=0,
          sigma_smooth=0., sigma_noise=0., rs=None):
     """
