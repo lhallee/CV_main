@@ -15,6 +15,7 @@ def initialize(
     run_type = 'hev', #type or run: hev, lobule, combo, -string
     data_type = 'real', #Real to use real data, toy to generate fake data, -string
     dim = 128, #model dimension, crop size, toy data size, -int
+    eval_dim = 1024, #the dimension of image data for evaluation, -int
     num_class = 2, #(num_class - 1) is the number of classes you are looking to segment, -int
     num_crops = 100, #number of crops on each training image, -int
     train = True, #Will train on generated train and validation data, then test on generated test data, -bool
@@ -81,5 +82,5 @@ def initialize(
                            model_type,
                            num_class,
                            backbone, LR, optimizer, loss,
-                           channel, norm, scale
+                           channel, norm, scale, eval_dim
                            )

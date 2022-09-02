@@ -136,8 +136,8 @@ def evaluate(weight_path,
              model_type,
              num_class,
              backbone, LR, optimizer, loss,
-             channel, norm, scale):
-    dim = 2048
+             channel, norm, scale, eval_dim):
+    dim = eval_dim
     big_crops, big_masks = dataprocessing.eval(dim,num_class,img_path,mask_path,norm,scale)
     if model_type == 'unet':
         model = models.att_unet_2d((dim, dim, channel), filter_num=[64, 128, 256, 512, 1024], n_labels=num_class,
@@ -180,6 +180,8 @@ def evaluate(weight_path,
         loss = reconstruction_loss
     if loss == 'jaccard':
         loss = jacard_loss
+    if loss == 'hybrid':
+        loss = hybrid_loss
 
     model.compile(loss=loss, optimizer=optimizer)
     model.load_weights(weight_path)
