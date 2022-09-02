@@ -217,11 +217,8 @@ def evaluate(weight_path,
     full_stack = np.array(full_stack)
     full_stack = full_stack.reshape(len(full_stack), dim, dim, 3)
     recon = np.zeros((H, W))
-    L = len(full_stack)
-    print(full_stack.shape)
-
-    row_num = int(W / L)
-    col_num = int(H / L)
+    row_num = int(W / step)
+    col_num = int(H / step)
     y_pred = model.predict([full_stack])
 
     for i in range(col_num):

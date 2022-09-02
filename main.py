@@ -83,3 +83,7 @@ def initialize(
                            backbone, LR, optimizer, loss,
                            channel, norm, scale, eval_dim
                            )
+'''
+initialize(norm=False,evaluate=True,eval_dim=256,train=False,same_weight=False,
+           weight_path='C:/Users/Logan Hallee/Desktop/Segmentation/Level set stuff/256-1hev_model_for_levelset2022-08-21.hdf5')
+'''
