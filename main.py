@@ -26,7 +26,7 @@ def initialize(
     #Options: unet, att-unet, r2-unet
     num_epoch = 1000, #number of epochs, -int
     num_batch = 100, #number of batches per epoch, -int
-    num_sample = 8, #number of samples per batch, -int
+    num_sample = 32, #number of samples per batch, -int
     patience = 50, #the max-allowed early stopping patience, -int
     min_del = 0, #the lowest acceptable loss value reduction, -float
     backbone = None, #Pretrained backbone for certain models, -string

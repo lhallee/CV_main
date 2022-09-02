@@ -92,12 +92,12 @@ def multi_test_viewer(img, mask, pred):
         AX[6].pcolormesh(mask[i, ..., 2], cmap=plt.cm.gray)
 
         AX[0].set_title("Original", fontsize=14);
-        AX[1].set_title("Mask Background", fontsize=14);
-        AX[2].set_title("Mask Lobule", fontsize=14);
-        AX[3].set_title("Mask HEV", fontsize=14);
-        AX[4].set_title("Pred Background", fontsize=14);
-        AX[5].set_title("Pred Lobule", fontsize=14);
-        AX[6].set_title("Pred HEV", fontsize=14);
+        AX[1].set_title("Pred Background", fontsize=14);
+        AX[2].set_title("Pred Lobule", fontsize=14);
+        AX[3].set_title("Pred HEV", fontsize=14);
+        AX[4].set_title("Mask Background", fontsize=14);
+        AX[5].set_title("Mask Lobule", fontsize=14);
+        AX[6].set_title("Mask HEV", fontsize=14);
         plt.show()
 def eval_viewer(img, mask, pred):
     dim = len(img[:][0])
@@ -147,12 +147,12 @@ def multi_eval_viewer(img, mask, pred):
         AX[6].pcolormesh(mask[i, ..., 2], cmap=plt.cm.gray)
 
         AX[0].set_title("Original", fontsize=14);
-        AX[1].set_title("Mask Background", fontsize=14);
-        AX[2].set_title("Mask Lobule", fontsize=14);
-        AX[3].set_title("Mask HEV", fontsize=14);
-        AX[4].set_title("Pred Background", fontsize=14);
-        AX[5].set_title("Pred Lobule", fontsize=14);
-        AX[6].set_title("Pred HEV", fontsize=14);
+        AX[1].set_title("Pred Background", fontsize=14);
+        AX[2].set_title("Pred Lobule", fontsize=14);
+        AX[3].set_title("Pred HEV", fontsize=14);
+        AX[4].set_title("Mask Background", fontsize=14);
+        AX[5].set_title("Mask Lobule", fontsize=14);
+        AX[6].set_title("Mask HEV", fontsize=14);
         plt.show()
 
     for i in range(3):
