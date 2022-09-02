@@ -75,6 +75,10 @@ def train(train_input,
                                    backbone=backbone, weights='imagenet',
                                    freeze_backbone=True, freeze_batch_norm=True,
                                    name='r2-unet')
+    if model_type == 'self-unet':
+        model = self_built.simple_unet_model(dim,dim,channel)
+    if model_type == 'self-multiunet':
+        model = self_built.multi_unet_model(dim,dim,channel,num_class)
 
     if optimizer == 'Adam':
         optimizer = keras.optimizers.Adam(LR)
@@ -95,7 +99,7 @@ def train(train_input,
         loss = hybrid_loss
 
     model.compile(loss=loss, optimizer=optimizer)
-
+    model.summary()
     # Callbacks
     early_stop = tf.keras.callbacks.EarlyStopping(
         monitor='val_loss',
@@ -164,6 +168,10 @@ def evaluate(weight_path,
                                    backbone=backbone, weights='imagenet',
                                    freeze_backbone=True, freeze_batch_norm=True,
                                    name='r2-unet')
+    if model_type == 'self-unet':
+        model = self_built.simple_unet_model(dim,dim,channel)
+    if model_type == 'self-multiunet':
+        model = self_built.multi_unet_model(dim,dim,channel,num_class)
 
     if optimizer == 'Adam':
         optimizer = keras.optimizers.Adam(LR)

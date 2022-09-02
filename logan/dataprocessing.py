@@ -1,7 +1,6 @@
 import numpy as np
 import tensorflow as tf
 import scipy
-
 from scipy.stats import beta
 from scipy.ndimage import gaussian_filter
 from matplotlib.path import Path as mpath

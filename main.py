@@ -17,13 +17,13 @@ def initialize(
     dim = 128, #model dimension, crop size, toy data size, -int
     eval_dim = 1024, #the dimension of image data for evaluation, -int
     num_class = 2, #(num_class - 1) is the number of classes you are looking to segment, -int
-    num_crops = 100, #number of crops on each training image, -int
+    num_crops = 1000, #number of crops on each training image, -int
     train = True, #Will train on generated train and validation data, then test on generated test data, -bool
     evaluate = False, #When true, will load weights from weight_path and evaluate full size images for 3D reconstruction, -bool
     dist_transform = False, #When true, apply signed distance transform to masks, -bool
     #For model
     model_type = 'att-unet', #Model type of choice, -string
-    #Options: unet, att-unet, r2-unet
+    #Options: unet, att-unet, r2-unet, self-unet, self-multiunet
     num_epoch = 1000, #number of epochs, -int
     num_batch = 100, #number of batches per epoch, -int
     num_sample = 32, #number of samples per batch, -int
