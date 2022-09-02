@@ -128,3 +128,38 @@ def eval_viewer(img, mask, pred):
         plt.colorbar()
         plt.show()
 
+def multi_eval_viewer(img, mask, pred):
+    dim = len(img[:][0])
+    x_col, y_col = cols(dim)
+    xfit = np.arange(0, dim, 0.1)
+    yfit = np.arange(0, dim, 0.1)
+    for i in range(3):
+        fig, AX = plt.subplots(1,7,figsize=(20,3))
+        plt.subplots_adjust(0,0,1,1,hspace=0,wspace=0.1)
+        for ax in AX:
+            ax = ax_decorate_box(ax)
+        AX[0].pcolormesh(np.mean(img[i, ...], axis=-1))
+        AX[1].pcolormesh(pred[i, ..., 0], cmap=plt.cm.coolwarm)
+        AX[2].pcolormesh(pred[i, ..., 1], cmap=plt.cm.coolwarm)
+        AX[3].pcolormesh(pred[i, ..., 2], cmap=plt.cm.coolwarm)
+        AX[4].pcolormesh(mask[i, ..., 0], cmap=plt.cm.gray)
+        AX[5].pcolormesh(mask[i, ..., 1], cmap=plt.cm.gray)
+        AX[6].pcolormesh(mask[i, ..., 2], cmap=plt.cm.gray)
+
+        AX[0].set_title("Original", fontsize=14);
+        AX[1].set_title("Mask Background", fontsize=14);
+        AX[2].set_title("Mask Lobule", fontsize=14);
+        AX[3].set_title("Mask HEV", fontsize=14);
+        AX[4].set_title("Pred Background", fontsize=14);
+        AX[5].set_title("Pred Lobule", fontsize=14);
+        AX[6].set_title("Pred HEV", fontsize=14);
+        plt.show()
+
+    for i in range(3):
+        img = pred[i,...,0]
+        set_func = scipy.interpolate.RectBivariateSpline(x_col,y_col,img)
+        detail_func = set_func(xfit,yfit)
+        levels = np.linspace(0.0,1.0,21)
+        plt.contourf(detail_func, levels=levels, cmap=plt.cm.coolwarm)
+        plt.colorbar()
+        plt.show()

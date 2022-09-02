@@ -187,4 +187,8 @@ def evaluate(weight_path,
     model.load_weights(weight_path)
     y_pred = model.predict([big_crops])
     print('Testing set cross-entropy = {}'.format(np.mean(keras.losses.categorical_crossentropy(big_masks, y_pred))))
-    plots.eval_viewer(big_crops, big_masks, y_pred)
+    if num_class == 2:
+        plots.eval_viewer(big_crops, big_masks, y_pred)
+    if num_class == 3:
+        plots.multi_eval_viewer(big_crops, big_masks, y_pred)
+
