@@ -226,7 +226,7 @@ def evaluate(weight_path,
     k = 0
     for i in range(col_num):
         for j in range(row_num):
-            recon[i*dim:(i+1)*dim, j*dim:(j+1)*dim] = y_pred[k,...,0]
+            recon[i*dim:(i+1)*dim, j*dim:(j+1)*dim] = y_pred[k,...,1]
             k += 1
 
     plots.eval_viewer(recon)

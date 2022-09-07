@@ -16,13 +16,16 @@ arr = np.array([
    [6., 7., 8., 9., 10.],
    [11., 12., 13., 14., 15.],
    [16., 17., 18., 19., 20.],
-   [21., 22., 23., 24., 25.]])
-arr = arr.reshape(5,5,1)
-
+   [21., 22., 23., 24., 25.],
+[26., 27., 28., 29., 30.],
+[31., 32., 33., 34.,35.]])
+arr = arr.reshape(7,5,1)
+print(arr)
 full_img_list = []
 
 
 H, W, C= arr.shape
+print(H,W,C)
 dim =2
 step = dim
 patch_imgs = skimage.util.view_as_windows(arr, (dim, dim, 1), step=step)
@@ -38,10 +41,11 @@ recon = np.zeros((int(H / dim) * dim, int(W / dim) * dim))
 row_num = int(W / step)
 col_num = int(H / step)
 
+k=0
 for i in range(col_num):
     for j in range(row_num):
-        recon[i * dim:(i + 1) * dim, j * dim:(j + 1) * dim] = full_stack[i + j, ..., 0]
-
+        recon[i * dim:(i + 1) * dim, j * dim:(j + 1) * dim] = full_stack[k, ..., 0]
+        k += 1
 print(recon)
 plt.contourf(recon)
 plt.show()
