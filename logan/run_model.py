@@ -216,11 +216,12 @@ def evaluate(weight_path,
     full_stack = tf.stack(full_img_list)
     full_stack = np.array(full_stack)
     full_stack = full_stack.reshape(len(full_stack), dim, dim, 3)
-    recon = np.zeros((H, W))
+    recon = np.zeros((int(H / dim) * dim, int(W / dim) * dim))
     row_num = int(W / step)
     col_num = int(H / step)
     y_pred = model.predict([full_stack])
 
+    plots.sign_viewer(y_pred,dim)
     for i in range(col_num):
         for j in range(row_num):
             recon[i*dim:(i+1)*dim, j*dim:(j+1)*dim] = y_pred[i+j,...,0]
