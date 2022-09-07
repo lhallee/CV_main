@@ -62,10 +62,10 @@ def sign_viewer(mask,dim):
         plt.show()
 
 def y_pred_viewer(mask,dim):
-    for i in range(3):
+    for i in range(10):
         sign = mask[i,...,0].reshape(dim,dim)
         levels = np.linspace(0,dim,1000)
-        plt.contourf(sign, levels=levels, cmap=plt.cm.coolwarm)
+        plt.contour(sign, levels=levels, cmap=plt.cm.coolwarm)
         plt.colorbar()
         plt.show()
 

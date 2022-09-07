@@ -222,9 +222,12 @@ def evaluate(weight_path,
     y_pred = model.predict([full_stack])
 
     plots.y_pred_viewer(y_pred,dim)
+
+    k = 0
     for i in range(col_num):
         for j in range(row_num):
-            recon[i*dim:(i+1)*dim, j*dim:(j+1)*dim] = y_pred[i+j,...,0]
+            recon[i*dim:(i+1)*dim, j*dim:(j+1)*dim] = y_pred[k,...,0]
+            k += 1
 
     plots.eval_viewer(recon)
 
