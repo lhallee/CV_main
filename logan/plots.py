@@ -61,6 +61,14 @@ def sign_viewer(mask,dim):
         plt.colorbar()
         plt.show()
 
+def y_pred_viewer(mask,dim):
+    for i in range(3):
+        sign = mask[i,...,0].reshape(dim,dim)
+        levels = np.linspace(0,dim,1000)
+        plt.contourf(sign, levels=levels, cmap=plt.cm.coolwarm)
+        plt.colorbar()
+        plt.show()
+
 def test_viewer(img, mask, pred):
     for i in range(3):
         fig, AX = plt.subplots(1, 3, figsize=(20, 7))
