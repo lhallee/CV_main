@@ -197,7 +197,7 @@ def evaluate(weight_path,
 
     full_img_list = []
     big_imgs_path = sorted(glob(img_path + '*.png'))
-    big_img_path = big_imgs_path[0]
+    big_img_path = big_imgs_path[1]
     big_img = tf.io.read_file(big_img_path)
     big_img = tf.image.decode_png(big_img, channels=3)
     big_img = np.array(big_img)
