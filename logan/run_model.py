@@ -209,13 +209,13 @@ def evaluate(weight_path,
 
     H, W, C = big_img.shape
     step = dim
-    patch_imgs = skimage.util.view_as_windows(big_img, (dim, dim, 3), step=step)
+    patch_imgs = skimage.util.view_as_windows(big_img, (dim, dim, C), step=step)
     for i in range(len(patch_imgs)):
-        for j in range(len(patch_imgs[0])):
+        for j in range(len(patch_imgs[1])):
             full_img_list.append(patch_imgs[i][j])
     full_stack = tf.stack(full_img_list)
     full_stack = np.array(full_stack)
-    full_stack = full_stack.reshape(len(full_stack), dim, dim, 3)
+    full_stack = full_stack.reshape(len(full_stack), dim, dim, C)
     recon = np.zeros((int(H / dim) * dim, int(W / dim) * dim))
     row_num = int(W / step)
     col_num = int(H / step)

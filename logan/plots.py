@@ -62,7 +62,7 @@ def sign_viewer(mask,dim):
         plt.show()
 
 def y_pred_viewer(mask,dim):
-    for i in range(10):
+    for i in range(3):
         sign = mask[i,...,1].reshape(dim,dim)
         levels = np.linspace(0,dim,1000)
         plt.contour(sign, levels=levels, cmap=plt.cm.coolwarm)
