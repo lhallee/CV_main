@@ -8,6 +8,7 @@ def initialize(
     #Paths
     img_path = '/img/', #Where your images are, string
     mask_path = '/mask/', #Where your masks are, string
+    eval_path = '/eval/', #Where evaluation images are, string
     save_weight = '/saved weights/', #Where you want to save the weights of the model, -string
     same_weight = True, #if true, uses the weights just saved, -bool
     weight_path = 'string', #specify path to use if same_weight = False, -string
@@ -42,10 +43,11 @@ def initialize(
     scale = False, #If true, divide images by 255, -bool
 ):
     #working_dir = os.path.dirname(__file__)
-    working_dir = '/content/drive/MyDrive/Logan/CV/IMG - Weights'
-    #working_dir = 'C:/Users/Logan Hallee/Desktop/Segmentation/Dir'
+    #working_dir = '/content/drive/MyDrive/Logan/CV/IMG - Weights'
+    working_dir = 'C:/Users/Logan/Desktop/Logan/School/UD/Research/Gleghorn/Code/Dir'
     img_path = working_dir + img_path
     mask_path = working_dir + mask_path
+    eval_path = working_dir + eval_path
     save_weight = working_dir + save_weight + str(dim) + '-' + str(backbone) + '-' + run_type + '-' + loss + '-' + optimizer + '-' + str(LR) + '-' + str(date.today()) + '.hdf5'
 
     channel = 3
@@ -78,12 +80,13 @@ def initialize(
 
         run_model.evaluate(weights,
                            img_path,
+                           mask_path,
+                           eval_path,
                            model_type,
                            num_class,
                            backbone, LR, optimizer, loss,
                            channel, norm, scale, eval_dim
                            )
-'''
-initialize(norm=False,evaluate=True,eval_dim=256,train=False,same_weight=False,
-           weight_path='C:/Users/Logan Hallee/Desktop/Segmentation/Level set stuff/256-1hev_model_for_levelset2022-08-21.hdf5')
-'''
+
+initialize(norm=True,evaluate=True,eval_dim=224,train=False,same_weight=False,
+           weight_path='C:/Users/Logan/Desktop/Logan/School/UD/Research/Gleghorn/Code/Dir/saved weights/512-None-lobule-jaccard-Adam-0.001-2022-09-02.hdf5')
