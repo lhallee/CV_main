@@ -6,6 +6,7 @@ from logan import plots
 from logan import dataprocessing
 from logan import self_built
 from keras_unet_collection import models, utils, losses
+from skimage import metrics
 from tensorflow import keras
 from keras import backend as K
 
@@ -33,6 +34,23 @@ def jacard_coef(y_true, y_pred):
 def jacard_loss(y_true, y_pred):
     return -jacard_coef(y_true, y_pred)
 
+#Metrics
+def recall_m(y_true, y_pred):
+    true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
+    possible_positives = K.sum(K.round(K.clip(y_true, 0, 1)))
+    recall = true_positives / (possible_positives + K.epsilon())
+    return recall
+
+def precision_m(y_true, y_pred):
+    true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
+    predicted_positives = K.sum(K.round(K.clip(y_pred, 0, 1)))
+    precision = true_positives / (predicted_positives + K.epsilon())
+    return precision
+
+def f1_m(y_true, y_pred):
+    precision = precision_m(y_true, y_pred)
+    recall = recall_m(y_true, y_pred)
+    return 2*((precision*recall)/(precision+recall+K.epsilon()))
 
 def model_selection(dim,
                     model_type,
@@ -143,6 +161,12 @@ def train(train_input,
 
     y_pred = model.predict([test_input])
     print('Testing set cross-entropy = {}'.format(np.mean(keras.losses.categorical_crossentropy(test_label, y_pred))))
+    print('Testing set Recall = {}'.format(np.mean(recall_m(test_label, y_pred))))
+    print('Testing set Precision = {}'.format(np.mean(precision_m(test_label, y_pred))))
+    print('Testing set F1 = {}'.format(np.mean(f1_m(test_label, y_pred))))
+    print('Testing set MSE = {}'.format(np.mean(metrics.mean_squared_error(test_label, y_pred))))
+    print('Testing set Hausdorff Distance = {}'.format(np.mean(metrics.hausdorff_distance(test_label,y_pred))))
+
     if num_class == 2:
         plots.test_viewer(test_input,test_label,y_pred)
     if num_class == 3:
