@@ -85,8 +85,8 @@ def model_selection(dim,
                                    backbone=backbone, weights='imagenet',
                                    freeze_backbone=True, freeze_batch_norm=True,
                                    name='r2-unet')
-    if model_type == 'swim-unet':
-        model = models.swim_unet_2d((dim, dim, channel), filter_num_begin=64, n_labels=num_class,
+    if model_type == 'swin-unet':
+        model = models.swin_unet_2d((dim, dim, channel), filter_num_begin=64, n_labels=num_class,
                                    stack_num_down=2, stack_num_up=2, patch_size=(3,3), depth=4,
                                    output_activation='Sigmoid',
                                    name='swim-unet')
