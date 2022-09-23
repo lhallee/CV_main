@@ -9,6 +9,7 @@ from keras_unet_collection import models, utils, losses
 from skimage import metrics
 from tensorflow import keras
 from keras import backend as K
+from timeit import default_timer as timer
 
 
 #Custom Loss Functions
@@ -89,7 +90,7 @@ def model_selection(dim,
         model = models.swin_unet_2d((dim, dim, channel), filter_num_begin=64, n_labels=num_class,
                                    stack_num_down=2, stack_num_up=2, patch_size=(3,3), depth=4,
                                    output_activation='Sigmoid',
-                                   name='swim-unet')
+                                   name='swin-unet')
     if model_type == 'trans-unet':
         model = models.transunet_2d((dim, dim, channel), filter_num=[64, 128, 256, 512, 1024], n_labels=num_class,
                                    stack_num_down=2, stack_num_up=2,
@@ -142,48 +143,54 @@ def train(train_input,
           loss,
           save_weight,
           channel):
+    for i in range(len(model_type)):
+        start = timer()
+        model_t = model_type[i]
 
-    model = model_selection(dim,model_type,num_class,backbone,LR,optimizer,loss,channel)
+        model = model_selection(dim,model_t,num_class,backbone,LR,optimizer,loss,channel)
 
-    # Callbacks
-    early_stop = tf.keras.callbacks.EarlyStopping(
-        monitor='val_loss',
-        min_delta=min_del,
-        patience=patience,
-        restore_best_weights=True
-    )
+        # Callbacks
+        early_stop = tf.keras.callbacks.EarlyStopping(
+            monitor='val_loss',
+            min_delta=min_del,
+            patience=patience,
+            restore_best_weights=True
+        )
 
-    cp_callback = tf.keras.callbacks.ModelCheckpoint(
-        filepath=save_weight,
-        save_weights_only=True,
-        save_best_only=True,
-        verbose=1
-    )
-    callbacks_list = [early_stop,cp_callback]
+        cp_callback = tf.keras.callbacks.ModelCheckpoint(
+            filepath=save_weight,
+            save_weights_only=True,
+            save_best_only=True,
+            verbose=1
+        )
+        callbacks_list = [early_stop,cp_callback]
 
-    model.fit(
-        train_input,
-        train_label,
-        batch_size=num_sample,
-        epochs=num_epoch,
-        steps_per_epoch=num_batch,
-        validation_split=0.2,
-        callbacks=callbacks_list,
-        shuffle=True
-    )
+        model.fit(
+            train_input,
+            train_label,
+            batch_size=num_sample,
+            epochs=num_epoch,
+            steps_per_epoch=num_batch,
+            validation_split=0.2,
+            callbacks=callbacks_list,
+            shuffle=True
+        )
 
-    y_pred = model.predict([test_input])
-    print('Testing set cross-entropy = {}'.format(np.mean(keras.losses.categorical_crossentropy(test_label, y_pred))))
-    print('Testing set Recall = {}'.format(np.mean(recall_m(test_label, y_pred))))
-    print('Testing set Precision = {}'.format(np.mean(precision_m(test_label, y_pred))))
-    print('Testing set F1 = {}'.format(np.mean(f1_m(test_label, y_pred))))
-    print('Testing set MSE = {}'.format(np.mean(metrics.mean_squared_error(test_label, y_pred))))
-    print('Testing set Hausdorff Distance = {}'.format(np.mean(metrics.hausdorff_distance(test_label,y_pred))))
+        y_pred = model.predict([test_input])
+        print('Testing set cross-entropy = {}'.format(np.mean(keras.losses.categorical_crossentropy(test_label, y_pred))))
+        print('Testing set Recall = {}'.format(np.mean(recall_m(test_label, y_pred))))
+        print('Testing set Precision = {}'.format(np.mean(precision_m(test_label, y_pred))))
+        print('Testing set F1 = {}'.format(np.mean(f1_m(test_label, y_pred))))
+        print('Testing set MSE = {}'.format(np.mean(metrics.mean_squared_error(test_label, y_pred))))
+        print('Testing set Hausdorff Distance = {}'.format(np.mean(metrics.hausdorff_distance(test_label,y_pred))))
 
-    if num_class == 2:
-        plots.test_viewer(test_input,test_label,y_pred)
-    if num_class == 3:
-        plots.multi_test_viewer(test_input,test_label,y_pred)
+        if num_class == 2:
+            plots.test_viewer(test_input,test_label,y_pred)
+        if num_class == 3:
+            plots.multi_test_viewer(test_input,test_label,y_pred)
+        end = timer()
+        time = end - start
+        print(model_type[i] + ' took ' + str(round(time, 2)) + ' seconds.\n')
 
 def evaluate(weight_path,
              img_path,

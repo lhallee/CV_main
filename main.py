@@ -23,8 +23,8 @@ def initialize(
     evaluate = False, #When true, will load weights from weight_path and evaluate full size images for 3D reconstruction, -bool
     dist_transform = False, #When true, apply signed distance transform to masks, -bool
     #For model
-    model_type = 'att-unet', #Model type of choice, -string
-    #Options: unet, att-unet, r2-unet, self-unet, self-multiunet
+    model_type = 'att-unet', #Model type or types of choice, list of strings
+    #Options: unet, att-unet, r2-unet, swin-unet, trans-unet, self-unet, self-multiunet
     num_epoch = 1000, #number of epochs, -int
     num_batch = 100, #number of batches per epoch, -int
     num_sample = 32, #number of samples per batch, -int
