@@ -3,9 +3,9 @@ import matplotlib.pyplot as plt
 import scipy.interpolate
 import skimage
 
-def cols(H, W):
-  x = np.array(range(W))
-  y = np.array(range(H))
+def cols(a, b):
+  x = np.array(range(a))
+  y = np.array(range(b))
   return x,y
 def ax_decorate_box(ax):
     [j.set_linewidth(0) for j in ax.spines.values()]
@@ -61,6 +61,21 @@ def sign_viewer(mask,dim):
         plt.colorbar()
         plt.show()
 
+def y_pred_viewer(mask):
+    for i in range(3):
+        fig, AX = plt.subplots(1, 3, figsize=(7, 3))
+        plt.subplots_adjust(0, 0, 1, 1, hspace=0, wspace=0.1)
+        for ax in AX:
+            ax = ax_decorate_box(ax)
+        AX[0].pcolormesh(mask[i, ..., 0], cmap=plt.cm.gray)
+        AX[1].pcolormesh(mask[i+3, ..., 0], cmap=plt.cm.gray)
+        AX[2].pcolormesh(mask[i+6, ..., 0], cmap=plt.cm.gray)
+        AX[0].set_title("Predicted Mask", fontsize=14)
+        AX[1].set_title("Predicted Mask", fontsize=14)
+        AX[2].set_title("Predicted mask", fontsize=14)
+        plt.show()
+
+
 def test_viewer(img, mask, pred):
     for i in range(3):
         fig, AX = plt.subplots(1, 3, figsize=(20, 7))
@@ -101,22 +116,27 @@ def multi_test_viewer(img, mask, pred):
         plt.show()
 def eval_viewer(img):
     H, W = img.shape
-    x_col, y_col = cols(H,W)
-    xfit = np.arange(0, W, 0.1)
-    yfit = np.arange(0, H, 0.1)
-    levels = np.linspace(0.0, 1.0, 21)
-    set_func = scipy.interpolate.RectBivariateSpline(y_col,x_col,img)
+    x_col, y_col = cols(W,H)
+    #xfit = np.arange(0, W, 0.1) #for higher resolution
+    #yfit = np.arange(0, H, 0.1)
+
+    #levels = np.linspace(0.0, 1.0, 21)
+    set_func = scipy.interpolate.RectBivariateSpline(x_col,y_col,img)
     func = set_func(x_col,y_col)
 
-    plt.contourf(func, levels=levels, cmap=plt.cm.coolwarm)
+    #plt.contourf(func, levels=levels, cmap=plt.cm.coolwarm)
+    plt.contourf(func, cmap=plt.cm.coolwarm)
     plt.colorbar()
     plt.show()
 
-    filt_img = skimage.filters.threshold_local(img)
-    filt_set_func = scipy.interpolate.RectBivariateSpline(y_col,x_col,filt_img)
+    filt_img = skimage.filters.threshold_local(img,51)
+    H, W = filt_img.shape
+    x_col, y_col = cols(W,H)
+    filt_set_func = scipy.interpolate.RectBivariateSpline(x_col,y_col,filt_img)
     filt_func = filt_set_func(x_col,y_col)
 
-    plt.contourf(filt_func, levels=levels, cmap=plt.cm.coolwarm)
+    #plt.contourf(filt_func, levels=levels, cmap=plt.cm.coolwarm)
+    plt.contourf(filt_func, cmap=plt.cm.coolwarm)
     plt.colorbar()
     plt.show()
 
