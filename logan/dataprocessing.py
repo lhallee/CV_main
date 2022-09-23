@@ -35,8 +35,8 @@ def crop(dim,amt,num_class,img_path,mask_path,norm,scale):
         for j in range(amt):
             img_crop = tf.image.stateless_random_crop(img, size=[dim, dim, 3], seed=[42,j]) #deterministic crop
             mask_crop = tf.image.stateless_random_crop(mask, size=[dim, dim, 1], seed=[42,j])
-            if ((np.count_nonzero(np.array(mask_crop)) / (dim * dim)) > 0.1):
-            #If there are more than 10% nonblack pixels in the mask the crop is kept, keeps images better for training
+            if ((np.count_nonzero(np.array(mask_crop)) / (dim * dim)) > 0.05):
+            #If there are more than 5% nonblack pixels in the mask the crop is kept, keeps images better for training
                 if (j % 3 == 0):
                     img_crop = tf.image.rot90(img_crop,k=1)
                     mask_crop = tf.image.rot90(mask_crop,k=1)
