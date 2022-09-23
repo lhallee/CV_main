@@ -97,7 +97,7 @@ def model_selection(dim,
                                    batch_norm=True, pool=False, unpool=False,
                                    backbone=backbone, weights='imagenet',
                                    freeze_backbone=True, freeze_batch_norm=True,
-                                   name='r2-unet')
+                                   name='trans-unet')
     if model_type == 'self-unet':
         model = self_built.simple_unet_model(dim,dim,channel)
     if model_type == 'self-multiunet':
