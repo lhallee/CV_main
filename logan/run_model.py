@@ -87,10 +87,9 @@ def model_selection(dim,
                                    freeze_backbone=True, freeze_batch_norm=True,
                                    name='r2-unet')
     if model_type == 'swin-unet':
-        model = models.swin_unet_2d((dim, dim, channel), filter_num_begin=64, n_labels=num_class,
-                                   stack_num_down=2, stack_num_up=2, patch_size=(3,3), depth=4, num_mlp=2,
-                                   output_activation='Sigmoid',num_heads=[4,8,12,16], window_size=[4,2,2,2],
-                                   name='swin-unet')
+        model = models.swin_unet_2d((dim, dim, channel), filter_num_begin=64, n_labels=num_class, depth=4, stack_num_down=2, stack_num_up=2,
+                            patch_size=(2, 2), num_heads=[4, 8, 8, 8], window_size=[4, 2, 2, 2], num_mlp=512,
+                            output_activation='Sigmoid', shift_window=True, name='swin_unet')
     if model_type == 'trans-unet':
         model = models.transunet_2d((dim, dim, channel), filter_num=[64, 128, 256, 512, 1024], n_labels=num_class,
                                    stack_num_down=2, stack_num_up=2,
@@ -123,6 +122,7 @@ def model_selection(dim,
         loss = hybrid_loss
 
     model.compile(loss=loss, optimizer=optimizer)
+    print(model.summary())
     return model
 
 def train(train_input,

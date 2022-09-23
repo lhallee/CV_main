@@ -44,7 +44,7 @@ def initialize(
 ):
     #working_dir = os.path.dirname(__file__)
     working_dir = '/content/drive/MyDrive/Logan/CV/IMG - Weights'
-    #working_dir = 'C:/Users/Logan/Desktop/Logan/School/UD/Research/Gleghorn/Code/Dir'
+    #working_dir = 'C:/Users/Logan Hallee/Desktop/Segmentation/Dir'
     img_path = working_dir + img_path
     mask_path = working_dir + mask_path
     eval_path = working_dir + eval_path
@@ -88,6 +88,13 @@ def initialize(
                            channel, norm, scale, eval_dim
                            )
 '''
-initialize(norm=True,evaluate=True,eval_dim=224,train=False,same_weight=False,
-           weight_path='C:/Users/Logan/Desktop/Logan/School/UD/Research/Gleghorn/Code/Dir/saved weights/512-None-lobule-jaccard-Adam-0.001-2022-09-02.hdf5')
+initialize(norm=True,train=True,data_type='toy',
+           model_type=['swin-unet'],
+           num_crops=50,
+           num_batch=50,
+           dim=128,
+           num_sample=8,
+           num_epoch=10,
+           run_type='trans-swin-test',
+           loss='jaccard')
 '''
