@@ -14,9 +14,8 @@ from timeit import default_timer as timer
 
 #Custom Loss Functions
 def hybrid_loss(y_true, y_pred):
-    loss_focal = losses.focal_tversky(y_true, y_pred, alpha=0.5, gamma=4/3)
-    loss_iou = losses.iou_seg(y_true, y_pred)
-    return loss_focal+loss_iou
+    hybrid = keras.losses.categorical_crossentropy(y_true, y_pred) - jacard_coef(y_true, y_pred)
+    return hybrid
   
 def reconstruction_loss(real, reconstruction):
   return tf.reduce_mean(
@@ -91,13 +90,10 @@ def model_selection(dim,
                             patch_size=(4, 4), num_heads=[4, 8, 8, 8, 8], window_size=[4, 2, 2, 2, 2], num_mlp=1024,
                             output_activation='Sigmoid', shift_window=True, name='swin_unet')
     if model_type == 'trans-unet':
-        model = models.transunet_2d((dim, dim, channel), filter_num=[64, 128, 256, 512, 1024], n_labels=num_class,
-                                   stack_num_down=2, stack_num_up=2,
-                                   output_activation='Sigmoid',
-                                   batch_norm=True, pool=False, unpool=False,
-                                   backbone=backbone, weights='imagenet',
-                                   freeze_backbone=True, freeze_batch_norm=True,
-                                   name='trans-unet')
+        model = models.transunet_2d((dim, dim, channel), filter_num=[64, 128, 256, 512], n_labels=num_class, stack_num_down=2, stack_num_up=2,
+                                embed_dim=512, num_mlp=2048, num_heads=12, num_transformer=12,
+                                activation='ReLU', mlp_activation='GELU', output_activation='Sigmoid',
+                                batch_norm=True, pool=True, unpool='bilinear', name='transunet')
     if model_type == 'self-unet':
         model = self_built.simple_unet_model(dim,dim,channel)
     if model_type == 'self-multiunet':
