@@ -85,6 +85,19 @@ def model_selection(dim,
                                    backbone=backbone, weights='imagenet',
                                    freeze_backbone=True, freeze_batch_norm=True,
                                    name='r2-unet')
+    if model_type == 'swim-unet':
+        model = models.swim_unet_2d((dim, dim, channel), filter_num_begin=64, n_labels=num_class,
+                                   stack_num_down=2, stack_num_up=2, patch_size=(3,3), depth=4,
+                                   output_activation='Sigmoid',
+                                   name='swim-unet')
+    if model_type == 'trans-unet':
+        model = models.transunet_2d((dim, dim, channel), filter_num=[64, 128, 256, 512, 1024], n_labels=num_class,
+                                   stack_num_down=2, stack_num_up=2,
+                                   output_activation='Sigmoid',
+                                   batch_norm=True, pool=False, unpool=False,
+                                   backbone=backbone, weights='imagenet',
+                                   freeze_backbone=True, freeze_batch_norm=True,
+                                   name='r2-unet')
     if model_type == 'self-unet':
         model = self_built.simple_unet_model(dim,dim,channel)
     if model_type == 'self-multiunet':
