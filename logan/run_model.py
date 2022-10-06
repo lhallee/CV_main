@@ -128,18 +128,20 @@ class PerformancePlotCallback(keras.callbacks.Callback):
         self.x_test = x_test
         self.y_test = y_test
         self.model_name = model_name
+
     def contour_plot(self, epoch, y_pred, i):
         levels = np.linspace(0.0, 1.0, 11)
-        plt.contourf(y_pred[0, ..., 0], levels=levels, cmap=plt.cm.coolwarm)
+        plt.contourf(y_pred, levels=levels, cmap=plt.cm.coolwarm)
         plt.colorbar()
         plt.tight_layout()
         plt.title(f'Prediction Visualization - Epoch: {epoch}')
-        plt.savefig('pred_' + str(i) + "_"+ self.model_name + "_" + str(epoch))
+        plt.savefig('pred_' + str(i) + "_" + self.model_name + "_" + str(epoch))
         plt.close()
+
     def on_epoch_end(self, epoch, logs={}):
         y_pred = self.model.predict(self.x_test)
         for i in range(len(y_pred)):
-            self.contour_plot(epoch, y_pred[i,...,0], i)
+            self.contour_plot(epoch, y_pred[i, ..., 0], i)
 
 def train(train_input,
           train_label,
@@ -180,7 +182,7 @@ def train(train_input,
             verbose=1
         )
 
-        val_performance = PerformancePlotCallback(test_input[0:25], test_label[0:25], str(model_t))
+        val_performance = PerformancePlotCallback(test_input[0:num_sample], test_label[0:num_sample], str(model_t))
 
         callbacks_list = [early_stop, cp_callback, val_performance]
 
