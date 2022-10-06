@@ -1,6 +1,7 @@
 import numpy as np
 import tensorflow as tf
 import skimage
+import matplotlib.pyplot as plt
 from glob import glob
 from logan import plots
 from logan import dataprocessing
@@ -121,6 +122,23 @@ def model_selection(dim,
     print(model.summary())
     return model
 
+
+class PerformancePlotCallback(keras.callbacks.Callback):
+    def __init__(self, x_test, y_test, model_name):
+        self.x_test = x_test
+        self.y_test = y_test
+        self.model_name = model_name
+
+    def on_epoch_end(self, epoch, logs={}):
+        y_pred = self.model.predict(self.x_test)
+        levels = np.linspace(0.0, 1.0, 11)
+        plt.contourf(y_pred[0,...,0], levels=levels, cmap=plt.cm.coolwarm)
+        plt.colorbar()
+        plt.tight_layout()
+        plt.title(f'Prediction Visualization - Epoch: {epoch}')
+        plt.savefig('run/' + self.model_name + "_" + str(epoch))
+        plt.close()
+
 def train(train_input,
           train_label,
           test_input,
@@ -159,7 +177,10 @@ def train(train_input,
             save_best_only=True,
             verbose=1
         )
-        callbacks_list = [early_stop,cp_callback]
+
+        val_performance = PerformancePlotCallback(test_input[0:1], test_label[0:1], str(model_t))
+
+        callbacks_list = [early_stop, cp_callback, val_performance]
 
         model.fit(
             train_input,
