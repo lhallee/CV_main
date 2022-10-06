@@ -89,12 +89,12 @@ def initialize(
                            )
 '''
 initialize(norm=True,train=True,data_type='toy',
-           model_type=['swin-unet'],
-           num_crops=50,
-           num_batch=50,
+           model_type=['att-unet'],
+           num_crops=1000,
+           num_batch=25,
            dim=128,
-           num_sample=8,
+           num_sample=1,
            num_epoch=10,
-           run_type='trans-swin-test',
+           run_type='val_callback_test',
            loss='jaccard')
 '''
