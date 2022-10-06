@@ -141,7 +141,7 @@ class PerformancePlotCallback(keras.callbacks.Callback):
     def on_epoch_end(self, epoch, logs={}):
         y_pred = self.model.predict(self.x_test)
         for i in range(len(y_pred)):
-            self.contour_plot(epoch, y_pred[i, ..., 0], i)
+            self.contour_plot(epoch, y_pred[i, ..., 1], i)
 
 def train(train_input,
           train_label,
