@@ -133,7 +133,6 @@ class PerformancePlotCallback(keras.callbacks.Callback):
         levels = np.linspace(0.0, 1.0, 11)
         plt.contourf(y_pred, levels=levels, cmap=plt.cm.coolwarm)
         plt.colorbar()
-        plt.tight_layout()
         plt.title(f'Prediction Visualization - Epoch: {epoch}')
         plt.savefig('pred_' + str(i) + "_" + self.model_name + "_" + str(epoch))
         plt.close()
